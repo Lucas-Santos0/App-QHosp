@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 
-export default function Inicio() {
+export default function Configuracao() {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -9,10 +9,10 @@ export default function Inicio() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView 
-          contentContainerStyle={styles.container}
+          contentContainerStyle={styles.container} 
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.titulo}>Informações Hospital</Text>
+          <Text style={styles.titulo}>Ficha médica</Text>
 
           <View style={styles.divider}>
             <View style={styles.line} />

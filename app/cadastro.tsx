@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { router } from 'expo-router';
 
 export default function Cadastro() {
@@ -9,76 +9,85 @@ export default function Cadastro() {
 
   function continuar() {
     Alert.alert('Usuário cadastrado com sucesso');
-    router.replace('/inicio');  // Navega para a tela de login (index.tsx)
+    router.replace('/inicio'); 
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.logo}>Qhosp</Text>
-      <Text style={styles.subtitulo}>gestão e suporte hospitalar</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+          <Text style={styles.logo}>Qhosp</Text>
+          <Text style={styles.subtitulo}>gestão e suporte hospitalar</Text>
 
-      <Text style={styles.titulo}>Criar uma conta</Text>
-      <Text style={styles.descricao}>Insira seu e-mail e uma senha para se cadastrar neste aplicativo</Text>
+          <Text style={styles.titulo}>Criar uma conta</Text>
+          <Text style={styles.descricao}>
+            Insira seu e-mail e uma senha para se cadastrar neste aplicativo
+          </Text>
 
-      <TextInput
-        placeholder="email@dominio.com"
-        style={styles.input}
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-      />
+          <TextInput
+            placeholder="email@dominio.com"
+            style={styles.input}
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+          />
 
-      <TextInput
-        placeholder="Senha"
-        style={styles.input}
-        secureTextEntry={true}
-        value={senha}
-        onChangeText={setSenha}
-        autoCapitalize="none"
-      />
+          <TextInput
+            placeholder="Senha"
+            style={styles.input}
+            secureTextEntry={true}
+            value={senha}
+            onChangeText={setSenha}
+            autoCapitalize="none"
+          />
 
-      <TextInput
-        placeholder="Confirmar Senha"
-        style={styles.input}
-        secureTextEntry={true}
-        value={confirmarSenha}
-        onChangeText={setConfirmarSenha}
-        autoCapitalize="none"
-      />
+          <TextInput
+            placeholder="Confirmar Senha"
+            style={styles.input}
+            secureTextEntry={true}
+            value={confirmarSenha}
+            onChangeText={setConfirmarSenha}
+            autoCapitalize="none"
+          />
 
-      <TouchableOpacity style={styles.btnContinuar} onPress={continuar}>
-        <Text style={styles.btnText}>Continuar</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.btnContinuar} onPress={continuar}>
+            <Text style={styles.TextContinuar}>Continuar</Text>
+          </TouchableOpacity>
 
-      <View style={styles.divider}>
-        <View style={styles.line} />
-        <Text style={styles.dividerText}>ou</Text>
-        <View style={styles.line} />
-      </View>
+          <View style={styles.divider}>
+            <View style={styles.line} />
+            <Text style={styles.dividerText}>ou</Text>
+            <View style={styles.line} />
+          </View>
 
-      <TouchableOpacity style={[styles.btnSocial, styles.google]}>
-        <Image
-          source={{ uri: "https://www.svgrepo.com/show/475656/google-color.svg" }}
-          style={styles.socialIcon}
-        />
-        <Text style={styles.btnText}>Continuar com o Google</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={[styles.btnSocial, styles.google]}>
+            <Image
+              source={{ uri: "https://www.svgrepo.com/show/475656/google-color.svg" }}
+              style={styles.socialIcon}
+            />
+            <Text style={styles.btnText}>Continuar com o Google</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.btnSocial, styles.apple]}>
-        <Image
-          source={{ uri: "https://www.svgrepo.com/show/303128/apple-logo.svg" }}
-          style={styles.socialIcon}
-        />
-        <Text style={styles.btnText}>Continuar com a Apple</Text>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity style={[styles.btnSocial, styles.apple]}>
+            <Image
+              source={{ uri: "https://www.svgrepo.com/show/303128/apple-logo.svg" }}
+              style={styles.socialIcon}
+            />
+            <Text style={styles.btnText}>Continuar com a Apple</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 24,
     backgroundColor: "#fff",
     justifyContent: "center",
@@ -120,9 +129,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   btnText: {
-    color: "#fff",
+    color: "#000",
     fontSize: 16,
     fontWeight: "600",
+  },
+  TextContinuar: {
+    color: "#fff",
   },
   divider: {
     flexDirection: "row",
@@ -146,10 +158,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   google: {
-    backgroundColor: "#DB4437",
+    borderColor: "#18ad51",
+    borderWidth: 3,
   },
   apple: {
-    backgroundColor: "#000",
+    borderColor: "#000",
+    borderWidth: 3,
   },
   socialIcon: {
     width: 20,
