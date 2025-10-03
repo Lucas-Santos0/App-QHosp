@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, Platform, Alert } from "react-native";
 
 export default function Contato() {
   const [email, setEmail] = useState('');
@@ -12,6 +12,11 @@ export default function Contato() {
     setMensagem('');
   };
 
+  function mensagemAlert(){
+    Alert.alert("Mensagem enviada com sucesso!","Em breve contataremos o Email indicado");
+    limparCampos();
+
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -51,7 +56,7 @@ export default function Contato() {
           textAlignVertical="top"
         />
 
-        <TouchableOpacity style={styles.btnEnviar}>
+        <TouchableOpacity style={styles.btnEnviar} onPress={mensagemAlert}>
           <Text style={styles.btnText}>Enviar</Text>
         </TouchableOpacity>
 

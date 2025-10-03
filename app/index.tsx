@@ -1,22 +1,64 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { router } from 'expo-router';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from "../conexaoFirebase/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const schema = z.object({
+  email: z.string().email("Email inválido"),
+  senha: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
+});
+
+type FormData = z.infer<typeof schema>;
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
 
-  function continuar() {
-    if(email === 'usuario@gmail.com' && senha === '123456'){
-      router.replace('/(tabs)/inicio');
-    } else {
-      Alert.alert('Erro', 'Email ou senha incorretos');
+  // Ir para cadastro
+  function IrParaCadastro() {
+    router.replace("/cadastro");
+  }
+
+  // Função de verificação e login
+  async function Verificacao(data: FormData) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.senha);
+      const user = userCredential.user;
+
+      const docRef = doc(db, "Usuarios", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const dadosUsuario = docSnap.data();
+
+        if (dadosUsuario.adm === true) {
+          Alert.alert("Atenção", "Você está tentando entrar como Administrador. Por favor, entre pelo nosso site.");
+        } else {
+          router.push("/inicio");
+        }
+      } else {
+        Alert.alert("Erro", "Usuário não encontrado no banco.");
+      }
+    } catch (error: any) {
+      console.error("Erro ao fazer login:", error);
+      if (error.code === "auth/wrong-password" || error.code === "auth/user-not-found") {
+        Alert.alert("Erro", "Email ou senha inválidos.");
+      } else {
+        Alert.alert("Erro", "Erro ao fazer login. Verifique suas credenciais ou tente novamente mais tarde.");
+      }
     }
   }
 
-  function irParaCadastro() {
-    router.push('/cadastro');
-  }
 
   return (
     <KeyboardAvoidingView
@@ -31,28 +73,44 @@ export default function Login() {
           <Text style={styles.titulo}>Login</Text>
           <Text style={styles.descricao}>Insira seu e-mail e senha para logar neste aplicativo</Text>
 
-          <TextInput
-            placeholder="email@dominio.com"
-            style={styles.input}
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                placeholder="email@dominio.com"
+                style={styles.input}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
           />
+          {errors.email && <Text style={{ color: "red" }}>{errors.email.message}</Text>}
 
-          <TextInput
-            placeholder="Senha"
-            style={styles.input}
-            secureTextEntry={true}
-            value={senha}
-            onChangeText={setSenha}
+
+          <Controller
+            control={control}
+            name="senha"
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                placeholder="Senha"
+                style={styles.input}
+                secureTextEntry
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
           />
+          {errors.senha && <Text style={{ color: "red" }}>{errors.senha.message}</Text>}
 
-          <TouchableOpacity style={styles.btnContinuar} onPress={continuar}>
+
+          <TouchableOpacity style={styles.btnContinuar} onPress={handleSubmit(Verificacao)}>
             <Text style={styles.btnText}>Continuar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.btnContinuar, {backgroundColor: '#34495e'}]} onPress={irParaCadastro}>
+          <TouchableOpacity style={[styles.btnContinuar, { backgroundColor: '#34495e' }]} onPress={IrParaCadastro}>
             <Text style={styles.btnText}>Cadastre-se</Text>
           </TouchableOpacity>
         </ScrollView>
