@@ -9,6 +9,9 @@ import { doc, setDoc } from "firebase/firestore";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'; // Importe outros ícones se necessário
+
 
 const schema = z
   .object({
@@ -79,11 +82,9 @@ export default function Cadastro() {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <TouchableOpacity style={[styles.btnContinuar, { backgroundColor: '#34495e' }]} onPress={voltar}>
-                      <Text style={styles.btnText}>Voltar</Text>
+          <TouchableOpacity style={styles.btnVoltar} onPress={voltar}>
+                      <MaterialIcons size={30} name="arrow-back-ios" />
           </TouchableOpacity>
-          <Text style={styles.logo}>Qhosp</Text>
-          <Text style={styles.subtitulo}>gestão e suporte hospitalar</Text>
 
           <Text style={styles.titulo}>Criar uma conta</Text>
           <Text style={styles.descricao}>
@@ -206,18 +207,10 @@ export default function Cadastro() {
               }}
               style={styles.socialIcon}
             />
-            <Text style={styles.btnText}>Continuar com o Google</Text>
+            <Text style={styles.btnTextSocial}>Continuar com o Google</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.btnSocial, styles.apple]}>
-            <Image
-              source={{
-                uri: "https://www.svgrepo.com/show/303128/apple-logo.svg",
-              }}
-              style={styles.socialIcon}
-            />
-            <Text style={styles.btnText}>Continuar com a Apple</Text>
-          </TouchableOpacity>
+          
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -274,7 +267,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   btnText: {
-    color: "#fff",
+    color: "#ffffffff",
     fontSize: 16,
     fontWeight: "600",
   },
@@ -298,18 +291,27 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginBottom: 12,
+    color: "#000000ff",
+
   },
   google: {
     borderColor: "#18ad51",
     borderWidth: 3,
   },
-  apple: {
-    borderColor: "#000",
-    borderWidth: 3,
-  },
   socialIcon: {
     width: 20,
     height: 20,
-    marginRight: 8,
+    marginRight: 20,
+    marginLeft: 20,
   },
+    btnTextSocial: {
+    color: "#000000ff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  btnVoltar:{
+    width:30,
+    marginBottom:30,
+  }
 });

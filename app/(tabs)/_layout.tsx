@@ -9,7 +9,7 @@ export default function TabsLayout() {
         headerShown: false,
         // (Mantenha ou remova as suas estilizações aqui)
         tabBarActiveTintColor: '#3498db',
-        tabBarStyle: { backgroundColor: '#2c3e50', height: 60, borderTopWidth: 0 },
+        tabBarStyle: { backgroundColor: '#2c3e50', height: 100, borderTopWidth: 0 },
         tabBarLabelStyle: { fontSize: 12, fontWeight: '600', marginBottom: 5 },
       }}
     >

@@ -1,16 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
-  ScrollView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Platform, TouchableWithoutFeedback, Keyboard,
 } from "react-native";
 
 import { auth, db } from "../../conexaoFirebase/firebase";
@@ -32,7 +21,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function FichaMedica({ navigation }: any) {
+export default function FichaMedica() {
   const {
     control,
     handleSubmit,
@@ -62,16 +51,8 @@ export default function FichaMedica({ navigation }: any) {
 
     try {
       const fichaRef = doc(db, "Usuarios", uid, "FichaMedica", "fichaPrincipal");
-      const fichaDoc = await getDoc(fichaRef);
-
-      if (fichaDoc.exists()) {
-        await setDoc(fichaRef, ficha, { merge: true });
-        Alert.alert("Sucesso", "Ficha médica atualizada com sucesso!");
-      } else {
-        await setDoc(fichaRef, ficha);
-        Alert.alert("Sucesso", "Ficha médica criada com sucesso!");
-      }
-
+      await setDoc(fichaRef, ficha, { merge: true });
+      Alert.alert("Sucesso", "Ficha médica salva com sucesso!");
       reset(ficha);
     } catch (error) {
       console.error(error);
@@ -114,12 +95,11 @@ export default function FichaMedica({ navigation }: any) {
     carregarFicha();
   }, [setValue]);
 
-  // Função de logout
   async function logout() {
     try {
       await auth.signOut();
       Alert.alert("Sucesso", "Logout realizado com sucesso!");
-      router.replace("/"); // Redireciona para tela de login
+      router.replace("/"); 
     } catch (error) {
       console.error(error);
       Alert.alert("Erro", "Não foi possível deslogar.");
@@ -132,106 +112,71 @@ export default function FichaMedica({ navigation }: any) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-          <Text style={styles.titulo}>Ficha Médica</Text>
+        <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+          <View style={styles.container}>
+            <Text style={styles.titulo}>Ficha Médica</Text>
 
-          {/* Data de Nascimento */}
-          <Controller
-            control={control}
-            name="dataNascimento"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                placeholder="Data de Nascimento"
-                style={styles.input}
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-          {errors.dataNascimento && <Text style={styles.errorText}>{errors.dataNascimento.message}</Text>}
+            <Controller
+              control={control}
+              name="dataNascimento"
+              render={({ field: { onChange, value } }) => (
+                <TextInput placeholder="Data de Nascimento" style={styles.input} value={value} onChangeText={onChange} />
+              )}
+            />
+            {errors.dataNascimento && <Text style={styles.errorText}>{errors.dataNascimento.message}</Text>}
 
-          {/* Sexo */}
-          <Controller
-            control={control}
-            name="sexo"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                placeholder="Sexo (M/F)"
-                style={styles.input}
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-          {errors.sexo && <Text style={styles.errorText}>{errors.sexo.message}</Text>}
+            <Controller
+              control={control}
+              name="sexo"
+              render={({ field: { onChange, value } }) => (
+                <TextInput placeholder="Sexo (M/F)" style={styles.input} value={value} onChangeText={onChange} />
+              )}
+            />
+            {errors.sexo && <Text style={styles.errorText}>{errors.sexo.message}</Text>}
 
-          {/* Telefone */}
-          <Controller
-            control={control}
-            name="telefone"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                placeholder="Telefone"
-                style={styles.input}
-                keyboardType="phone-pad"
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-          {errors.telefone && <Text style={styles.errorText}>{errors.telefone.message}</Text>}
+            <Controller
+              control={control}
+              name="telefone"
+              render={({ field: { onChange, value } }) => (
+                <TextInput placeholder="Telefone" style={styles.input} keyboardType="phone-pad" value={value} onChangeText={onChange} />
+              )}
+            />
+            {errors.telefone && <Text style={styles.errorText}>{errors.telefone.message}</Text>}
 
-          {/* Tipo Sanguíneo */}
-          <Controller
-            control={control}
-            name="tipoSanguineo"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                placeholder="Tipo Sanguíneo"
-                style={styles.input}
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-          {errors.tipoSanguineo && <Text style={styles.errorText}>{errors.tipoSanguineo.message}</Text>}
+            <Controller
+              control={control}
+              name="tipoSanguineo"
+              render={({ field: { onChange, value } }) => (
+                <TextInput placeholder="Tipo Sanguíneo" style={styles.input} value={value} onChangeText={onChange} />
+              )}
+            />
+            {errors.tipoSanguineo && <Text style={styles.errorText}>{errors.tipoSanguineo.message}</Text>}
 
-          {/* Alergia */}
-          <Controller
-            control={control}
-            name="alergia"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                placeholder="Alergia (se houver)"
-                style={styles.input}
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
+            <Controller
+              control={control}
+              name="alergia"
+              render={({ field: { onChange, value } }) => (
+                <TextInput placeholder="Alergia (se houver)" style={styles.input} value={value} onChangeText={onChange} />
+              )}
+            />
 
-          {/* Endereço */}
-          <Controller
-            control={control}
-            name="endereco"
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                placeholder="Endereço"
-                style={styles.input}
-                value={value}
-                onChangeText={onChange}
-              />
-            )}
-          />
-          {errors.endereco && <Text style={styles.errorText}>{errors.endereco.message}</Text>}
+            <Controller
+              control={control}
+              name="endereco"
+              render={({ field: { onChange, value } }) => (
+                <TextInput placeholder="Endereço" style={styles.input} value={value} onChangeText={onChange} />
+              )}
+            />
+            {errors.endereco && <Text style={styles.errorText}>{errors.endereco.message}</Text>}
 
-          <TouchableOpacity style={styles.btnSalvar} onPress={handleSubmit(salvarFicha)}>
-            <Text style={styles.btnText}>Salvar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.btnSalvar} onPress={handleSubmit(salvarFicha)}>
+              <Text style={styles.btnText}>Salvar</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btnLogout} onPress={logout}>
-            <Text style={styles.btnText}>Logout</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.btnLogout} onPress={logout}>
+              <Text style={styles.btnText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -239,11 +184,14 @@ export default function FichaMedica({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollContainer: {
     flexGrow: 1,
+  },
+  container: {
+    flex: 1,
     padding: 24,
+    justifyContent: "center", // igual à tela de Contato
     backgroundColor: "#fff",
-    justifyContent: "center",
   },
   titulo: {
     fontSize: 24,

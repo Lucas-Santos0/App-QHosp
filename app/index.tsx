@@ -29,6 +29,10 @@ export default function Login() {
     router.replace("/cadastro");
   }
 
+  function IrParaEsqueceuSenha() {
+    router.replace("/esqueceuSenha");
+  }
+
   // Função de verificação e login
   async function Verificacao(data: FormData) {
     try {
@@ -105,14 +109,22 @@ export default function Login() {
           />
           {errors.senha && <Text style={{ color: "red" }}>{errors.senha.message}</Text>}
 
+          <TouchableOpacity onPress={IrParaEsqueceuSenha}>
+            <Text style={styles.descricao}>
+              Esqueceu sua senha?
+            </Text>
+          </TouchableOpacity>
 
           <TouchableOpacity style={styles.btnContinuar} onPress={handleSubmit(Verificacao)}>
             <Text style={styles.btnText}>Continuar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.btnContinuar, { backgroundColor: '#34495e' }]} onPress={IrParaCadastro}>
-            <Text style={styles.btnText}>Cadastre-se</Text>
-          </TouchableOpacity>
+          <View style={styles.linhaCadastro}>
+            <Text>Não tem uma conta? </Text>
+            <TouchableOpacity onPress={IrParaCadastro}>
+              <Text style={styles.btnTextCadastro}>Cadastre-se</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -167,4 +179,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  btnCadastro: {
+    borderRadius: 8,
+    alignItems: "center",
+    top: 200,
+  },
+  btnTextCadastro: {
+    color: "#2c3e50",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  linhaCadastro: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+
+
 });
